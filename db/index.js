@@ -6,8 +6,21 @@ sequelize.sync();
 
 Tweet.belongsTo(User, {foreignKey: 'user_id'});
 
-User.findAll({
-  attributes: ['name', 'handle']
-});
+module.exports = {
+  clearUsers: function() {
+    console.log('deleting Users')
+    User.destroy({
+      where: {}
+    })
+  },
 
-module.exports.User = User;
+  // writeUsers: function(users) {
+  //   users.forEach(async function (user) {
+  //     await User.create(user).then(() => console.log(user));
+  //   });
+  // },
+
+  writeUsersBulk: users => {
+    return User.bulkCreate(users);
+  }
+}

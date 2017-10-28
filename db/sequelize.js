@@ -7,7 +7,13 @@ const config = {
     "userId": "userid"
   },
   "host": "localhost",
-	"dialect": "postgres"
+  "dialect": "postgres",
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 20000,
+    acquire: 20000
+    }
 };
 
 const sequelize = new Sequelize('home', 'home', '', config);
