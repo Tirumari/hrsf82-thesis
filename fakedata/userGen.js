@@ -1,4 +1,6 @@
 const faker = require('faker');
+const fetch = require('isomorphic-fetch');
+const promise = require('es6-promise');
 
 // store of users
 var users = [];
@@ -6,7 +8,7 @@ var users = [];
 var handles = {};
 
 // population of users
-while (users.length < 10) {
+while (users.length < 500000) {
   var name = faker.name.findName();
   var handle = name.split(' ').join('') + Math.floor(Math.random() * 99);
 
@@ -21,3 +23,15 @@ while (users.length < 10) {
     });
   }
 }
+
+
+
+// var myInit = { method: 'PUT',
+//                mode: 'cors',
+//                cache: 'default',
+//                data: users };
+
+// fetch('http://localhost:3000/test', myInit)
+//   .then((response) => {
+//     console.log('fetch sent');
+//   })

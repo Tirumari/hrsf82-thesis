@@ -5,11 +5,11 @@ const path = require('path');
 const app = express();
 app.use(express.static(path.join(__dirname, '../client/dist/')));
 
-app.get('/test', function (req, res) {
-  res.send('get request received!');
-});
-
-
+// app.put('/test', function (req, res) {
+//   console.log('put request received!');
+//   console.log(req);
+//   res.send('put request received!');
+// });
 
 const PORT = process.env.PORT || 3000;
 
