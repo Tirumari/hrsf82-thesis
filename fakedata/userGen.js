@@ -2,14 +2,18 @@ const faker = require('faker');
 const fetch = require('isomorphic-fetch');
 const promise = require('es6-promise');
 
-const db = require('../db/index.js')
+const db = require('../db/index.js');
 
 // store of users
 var users = [];
 // store of handles
 var handles = {};
 
-db.clearUsers();
+const clearUsersTable = async () => {
+  await db.clearUsers();;
+}
+
+// clearUsersTable();
 
 var count = 0;
 // population of users
@@ -30,12 +34,13 @@ while (count < 500000) {
     users.push(user);
     count++;
 
+    const write = async (users) => {
+      await db.writeUsersBulk(users);
+    }
+
     if (users.length === 5000) {
       console.log('5000 users! Count: ' + count);
-      const write = async () => {
-        await db.writeUsersBulk(users);
-      }
-      write();
+      write(users);
       users = [];
     }
   }

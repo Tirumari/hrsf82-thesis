@@ -8,8 +8,19 @@ Tweet.belongsTo(User, {foreignKey: 'user_id'});
 
 module.exports = {
   clearUsers: function() {
-    console.log('deleting Users')
-    User.destroy({
+    console.log('deleting users...');
+    return User.destroy({
+      where: {
+        force: true
+      }
+    }).then(() => {
+      console.log('deleted users!');
+    })
+  },
+
+  clearTweets: function() {
+    console.log('deleting Tweets')
+    Tweet.destroy({
       where: {}
     })
   },
@@ -21,6 +32,13 @@ module.exports = {
   // },
 
   writeUsersBulk: users => {
-    return User.bulkCreate(users);
+    User.bulkCreate(users);
+  },
+
+  writeTweetsBulk: tweets => {
+    Tweet.bulkCreate(tweets)
+      .catch(function() {
+        console.log('promise rejected');
+      });
   }
 }
