@@ -3,6 +3,7 @@ const fetch = require('isomorphic-fetch');
 const promise = require('es6-promise');
 
 const db = require('../db/index.js');
+const { addTweet } = require('../db/index.js');
 
 /*******************************************************************************************************************************
 RANDOM VALUE GENERATORS *******************************************************************************************************************************/
@@ -119,30 +120,39 @@ var tweetGenerator = function() {
 		userId: userGenerator(),
 		message: messageGenerator(),
 		createdAt: dateGenerator(),
-		impressions: impressions,
 		views: views,
 		likes: likes,
+		retweets: retweets,
 		replies: replies,
-		retweets: retweets
+		impressions: impressions
 	}
 	return tweet;
 };
 
-const write = async (array) => {
-	await db.writeTweetsBulk(array);
+const write = async (user_id, message, created_at, views, likes, retweets, replies, impressions) => {
+	// await db.writeTweetsBulk(array);
+	await addTweet(user_id, message, created_at, views, likes, retweets, replies, impressions);
 };
 var tweets = [];
 var count = 0;
 // db.clearTweets();
 
-while (count < 1000000) {
+while (count < 500000) {
 	var tweet = tweetGenerator();
   tweets.push(tweet);
-  count++;
+	count++;
+	
+	write(tweet.userId, tweet.message, tweet.createdAt, tweet.views, tweet.likes, tweet.retweets, tweet.replies, tweet.impressions);
+
+	if (count%5000 === 0) {
+		console.log('5000 tweets! Count: ' + count);
+	}
   
-  if (tweets.length === 5000) {
-    console.log('5000 tweets! Count: ' + count);
-    write(tweets);
-    tweets = [];
-  }
+  // if (tweets.length === 5000) {
+  //   console.log('5000 tweets! Count: ' + count);
+  //   write(tweets);
+  //   tweets = [];
+  // }
 }
+
+module.exports = tweetGen;

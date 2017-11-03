@@ -20,7 +20,7 @@ CREATE TABLE tweets (
 	id serial PRIMARY KEY,
     user_id integer REFERENCES users(id),
 	message varchar (255) NOT NULL,
-	created_at date ,
+	created_at varchar (100) ,
 	views integer,
 	likes integer,
 	retweets integer,
