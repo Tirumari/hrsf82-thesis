@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server-start": "node ./server/index.js"
+    "server-start": "node ./server/index.js",
+    "prod": "node --max-old-space-size=4096 ./node_modules/lodash/lodash.js build --prod"
   },
   "repository": {
     "type": "git",
@@ -19,8 +20,12 @@
   "homepage": "https://github.com/Tirumari/hrsf82-thesis#readme",
   "dependencies": {
     "aws-sdk": "^2.138.0",
+    "elasticsearch": "^13.3.1",
     "es6-promise": "^4.1.1",
     "express": "^4.16.2",
+    "faker": "^4.1.0",
+    "fast-csv": "^2.4.1",
+    "file-system": "^2.2.2",
     "isomorphic-fetch": "^2.2.1",
     "nodemon": "^1.12.1",
     "pg": "^7.3.0",
