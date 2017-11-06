@@ -2,8 +2,44 @@ const faker = require('faker');
 const fetch = require('isomorphic-fetch');
 const promise = require('es6-promise');
 
-const db = require('../db/index.js');
-const { addTweet } = require('../db/index.js');
+const { Pool, Client } = require('pg');
+
+/************************************************************************
+POSTGRES METHODS
+************************************************************************/
+
+var pool = new Pool({
+    database: 'tweeter',
+    password: ''
+  })
+  
+const client = new Client({
+  database: 'tweeter',
+  password: ''
+})
+client.connect();
+
+pool.connect(function(err, client, done) {
+    if (err) {
+        console.log('could not connect');
+    }
+    console.log('connected to db');
+    done();
+})
+
+// var addTweet = function(user_id, message, created_at, views, likes, retweets, replies, impressions) {
+//   const text = 'INSERT INTO tweets (user_id, message, created_at, views, likes, retweets, replies, impressions) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
+//   const values = [user_id, message, created_at, views, likes, retweets, replies, impressions];
+  
+//   client.query(text, values, (err, res) => {
+//       if (err) {
+//       console.log('error inserting into db', err);
+//       } else {
+//           console.log('inserted tweet');
+          
+//       }
+//   })
+// }
 
 /*******************************************************************************************************************************
 RANDOM VALUE GENERATORS *******************************************************************************************************************************/
@@ -129,30 +165,46 @@ var tweetGenerator = function() {
 	return tweet;
 };
 
-const write = async (user_id, message, created_at, views, likes, retweets, replies, impressions) => {
-	// await db.writeTweetsBulk(array);
-	await addTweet(user_id, message, created_at, views, likes, retweets, replies, impressions);
+const write = (user_id, message, created_at, views, likes, retweets, replies, impressions, count) => {
+	return new Promise(function(resolve, reject){
+		const text = 'INSERT INTO tweets (user_id, message, created_at, views, likes, retweets, replies, impressions) VALUES($1, $2, $3, $4, $5, $6, $7, $8)'
+	  const values = [user_id, message, created_at, views, likes, retweets, replies, impressions];
+	  
+	  client.query(text, values, (err, res) => {
+      if (err) {
+        console.log('error inserting into db', err);
+        reject(err);
+      } else {
+        console.log('successful POSTGRES insert with tweet batch: ' + count);
+        resolve();
+      } 
+    });
+	});
 };
+
 var tweets = [];
 var count = 0;
 // db.clearTweets();
 
-while (count < 500000) {
-	var tweet = tweetGenerator();
-  tweets.push(tweet);
-	count++;
-	
-	write(tweet.userId, tweet.message, tweet.createdAt, tweet.views, tweet.likes, tweet.retweets, tweet.replies, tweet.impressions);
+var tweetRun = async () => {
+	while (count < 2500000) {
+		var tweet = tweetGenerator();
 
-	if (count%5000 === 0) {
-		console.log('5000 tweets! Count: ' + count);
+	  tweets.push(tweet);
+		
+		await write(tweet.userId, tweet.message, tweet.createdAt, tweet.views, tweet.likes, tweet.retweets, tweet.replies, tweet.impressions, count);
+		count++;
+
+		if (count % 5000 === 0) {
+			console.log('5000 tweets! Count: ' + count);
+		}
+	  
+	  // if (tweets.length === 5000) {
+	  //   console.log('5000 tweets! Count: ' + count);
+	  //   write(tweets);
+	  //   tweets = [];
+	  // }
 	}
-  
-  // if (tweets.length === 5000) {
-  //   console.log('5000 tweets! Count: ' + count);
-  //   write(tweets);
-  //   tweets = [];
-  // }
 }
 
-module.exports = tweetGen;
+tweetRun();
