@@ -7,7 +7,7 @@ CREATE DATABASE tweeter;
 DROP TABLE IF EXISTS users;
 
 DROP TABLE IF EXISTS tweets;
-g
+
 CREATE TABLE tweets (
   tweet_id varchar (100) PRIMARY KEY,
   user_id integer,
