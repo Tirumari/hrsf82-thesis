@@ -25,7 +25,11 @@ var userGenerator = function() {
 var messageGenerator = function() {
   var message = [randomElement(messageParts.opening), randomElement(messageParts.verbs), randomElement(messageParts.objects), randomElement(messageParts.nouns), randomElement(messageParts.tags)];
 
-  return message;
+  if (messageParts.properNouns.includes(message[3]) && message[2][0] !== 'a') {
+    message.splice(2, 1);
+  }
+
+  return message.join(' ').trim();
 };
 
 // created_at date

@@ -17,5 +17,5 @@ tweetRun = async (targetAmount) => {
   }
 };
 
-tweetRun(10000);
+tweetRun(2500000);
 
