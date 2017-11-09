@@ -24,8 +24,8 @@ module.exports.tweetGen = async (targetAmount) => {
 
     // data insertion
 
-    if (tweets.length === 5000) {
-      console.log('/**************************************************************\n5,000 MORE TWEETS! COUNT: ' + count + '\n**************************************************************/');
+    if (tweets.length === 10000) {
+      console.log('/**************************************************************\n10,000 MORE TWEETS! COUNT: ' + count + '\n**************************************************************/');
       // await postgres insert of tweets
       await db.writeTweetsBulk(tweets);
       // await elastic insert of tweets
